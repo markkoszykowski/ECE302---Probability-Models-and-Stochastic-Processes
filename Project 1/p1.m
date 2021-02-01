@@ -10,59 +10,61 @@ close all;
 easySimNum = 10^6;
 mediSimNum = 10^6;
 hardSimNum = 10^6;
+indent = "     ";
 
 %% 1
 
+disp("1");
 
 % a
 
-a = 1:easySimNum;
-for i = 1:size(a, 2)
-    a(i) = d(3, 6);
+a1 = 1:easySimNum;
+for i = 1:size(a1, 2)
+    a1(i) = d(3, 6);
 end
 
 figure;
-histogram(a);
+histogram(a1);
 title("Simulation of 3d6");
 xlabel("Roll");
 ylabel("Frequency");
 
-disp("A:");
-disp("Experimental: " + prob(a, 18));
-disp("Expected: " + 1/216);
+disp(indent + "A:");
+disp(indent + indent + "Experimental: " + prob(a1, 18));
+disp(indent + indent + "Expected: " + 1/216);
 
 
 % b
 
-b = 1:easySimNum;
-for i = 1:size(b, 2)
-    b(i) = fun(3, 6);
+b1 = 1:easySimNum;
+for i = 1:size(b1, 2)
+    b1(i) = fun(3, 6);
 end
 
 figure;
-histogram(b);
+histogram(b1);
 title("Simulation of 3d6 Using 'Fun Method'");
 xlabel("Roll");
 ylabel("Frequency");
 
-disp(newline + "B:");
-disp("Experimental: " + prob(b, 18));
-disp("Expected: " + 1/72);
+disp(newline + indent + "B:");
+disp(indent + indent + "Experimental: " + prob(b1, 18));
+disp(indent + indent + "Expected: " + 1/72);
 
 
 % c
 
-c = zeros(6, hardSimNum);
-for i = 1:size(c, 2)
-    c(:, i) = [fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6)];
+c1 = zeros(6, hardSimNum);
+for i = 1:size(c1, 2)
+    c1(:, i) = [fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6)];
 end
 
-disp(newline + "C:");
-disp("Experimental: " + prob(c, [18 18 18 18 18 18]));
-disp("Expected: " + 1/(72^6));
+disp(newline + indent + "C:");
+disp(indent + indent + "Experimental: " + prob(c1, [18 18 18 18 18 18]));
+disp(indent + indent + "Expected: " + 1/(72^6));
 
-for i = 1:size(c, 2)
-    if min(c(:, i) == [18 18 18 18 18 18])
+for i = 1:size(c1, 2)
+    if min(c1(:, i) == [18 18 18 18 18 18])
         disp("A Fontaine was rolled!");
         break;
     end
@@ -71,17 +73,17 @@ end
 
 % d
 
-d = zeros(6, mediSimNum);
-for i = 1:size(d, 2)
-    d(:, i) = [fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6)];
+d1 = zeros(6, hardSimNum);
+for i = 1:size(d1, 2)
+    d1(:, i) = [fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6)];
 end
 
-disp(newline + "D:");
-disp("Experimental: " + prob(d, [9 9 9 9 9 9]));
-disp("Expected: " + 1/(24^6));
+disp(newline + indent + "D:");
+disp(indent + indent + "Experimental: " + prob(d1, [9 9 9 9 9 9]));
+disp(indent + indent + "Expected: " + 1/(24^6));
 
-for i = 1:size(d, 2)
-    if min(d(:, i) == [9 9 9 9 9 9])
+for i = 1:size(d1, 2)
+    if min(d1(:, i) == [9 9 9 9 9 9])
         disp("A Keene was rolled!");
         break;
     end
