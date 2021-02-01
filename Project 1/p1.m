@@ -1,5 +1,5 @@
 %% ECE310 - Prob & Stoch Project 1
-%% Mark Koszykowski, Henry Son, Tamar Bacalu
+%% Tamar Bacalu, Mark Koszykowski, Henry Son
 
 clc;
 clear;
