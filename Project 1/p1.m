@@ -134,9 +134,9 @@ yticklabels(yticks / size(a2spell,2));
 
 c2 = 1:easySimNum;
 for i = 1:size(c2, 2)
-    temp1 = d(1, 4) + d(1, 4) + d(1, 4) + d(1, 4) + d(1, 4) + d(1, 4);
+    temp1 = d(1, 4) + d(1, 4);
     temp2 = d(2, 2);
-    if temp2 > temp1
+    if temp2 >= temp1
         c2(i) = 0;
     else
         c2(i) = temp1 - temp2;
@@ -145,28 +145,27 @@ end
 
 disp(newline + indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c2, 0));
-disp(indent + indent + "Expected: " + 0);
+disp(indent + indent + "Expected: " + 13/64);
 
 
 % d
 
-%{
+
 d2 = 1:easySimNum;
 for i = 1:size(d2, 2)
     while true
-        temp1 = d(1, 4) + d(1, 4) + d(1, 4) + d(1, 4) + d(1, 4);
+        temp1 = d(1, 4);
         temp2 = d(2, 2);
-        if temp2 > temp1
+        if temp2 >= temp1
             break;
         end
     end
-    d2(i) = d(1, 4) - (temp2 - temp1);
+    d2(i) = temp2 - temp1;
 end
 
 disp(newline + indent + "D:");
 disp(indent + indent + "Experimental: " + mean(d2));
-disp(indent + indent + "Expected: " + 4/3);
-%}
+disp(indent + indent + "Expected: " + 13/12);
 
 % e
 
