@@ -25,7 +25,7 @@ end
 
 figure;
 histogram(a1);
-title("Simulation of 3d6");
+title("Simulation of 3d6 with " + easySimNum + " Samples");
 xlabel("Roll");
 ylabel("Frequency");
 
@@ -43,7 +43,7 @@ end
 
 figure;
 histogram(b1);
-title("Simulation of 3d6 Using 'Fun Method'");
+title("Simulation of 3d6 Using 'Fun Method' with " + easySimNum + " Samples");
 xlabel("Roll");
 ylabel("Frequency");
 
@@ -117,14 +117,14 @@ disp(indent + indent + "Expected Probability FIREBALL is >3: " + 1/4);
 figure;
 subplot(2, 1, 1);
 histogram(a2troll);
-title("Probability Mass Function of Troll Hit Points");
+title("Probability Mass Function of Troll Hit Points with " + easySimNum + " Samples");
 xlabel("Hit Points");
 ylabel("Probability");
 yticklabels(yticks / size(a2troll,2));
 
 subplot(2, 1, 2);
 histogram(a2spell);
-title("Probability Mass Function of Wizard Spell Damage");
+title("Probability Mass Function of Wizard Spell Damage with " + easySimNum + " Samples");
 xlabel("Spell Damage");
 ylabel("Probability");
 yticklabels(yticks / size(a2spell,2));
@@ -150,7 +150,6 @@ disp(indent + indent + "Expected: " + 13/64);
 
 % d
 
-
 d2 = 1:easySimNum;
 for i = 1:size(d2, 2)
     while true
@@ -167,16 +166,15 @@ disp(newline + indent + "D:");
 disp(indent + indent + "Experimental: " + mean(d2));
 disp(indent + indent + "Expected: " + 13/12);
 
+
 % e
 
 e2 = 1:mediSimNum;
 for i = 1:size(e2, 2)
     damage = 0;
-    SoT = rollDice(20);
-    if SoT >= 11
+    if rollDice(20) >= 11
         damage = damage + d(2, 6);
-        HoTD = rollDice(20);
-        if HoTD >= 11
+        if rollDice(20) >= 11
             damage = damage + d(1, 4);
         end
     end
@@ -185,7 +183,7 @@ end
 
 figure;
 histogram(e2);
-title("Simulation of Shedjam Damage");
+title("Simulation of Shedjam Damage with " + mediSimNum + " Samples");
 xlabel("Damage");
 ylabel("Frequency");
 
