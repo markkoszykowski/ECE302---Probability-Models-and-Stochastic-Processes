@@ -7,9 +7,9 @@ close all;
 
 rollDice = @(x) randi(x);
 
-easySimNum = 10^6;
-mediSimNum = 10^7;
-hardSimNum = 10^6;
+easySimNum = 10^5;
+mediSimNum = 10^6;
+hardSimNum = 10^7;
 indent = "     ";
 
 %% 1
@@ -49,19 +49,21 @@ ylabel("Frequency");
 
 disp(newline + indent + "B:");
 disp(indent + indent + "Experimental: " + prob(b1, 18));
-disp(indent + indent + "Expected: " + 1/72);
+disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3));
 
 
 % c
 
 c1 = zeros(6, hardSimNum);
 for i = 1:size(c1, 2)
-    c1(:, i) = [fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6) fun(3, 6)];
+    for j = 1:size(c1, 1)
+        c1(j, i) = fun(3, 6);
+    end
 end
 
 disp(newline + indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c1, [18 18 18 18 18 18]));
-disp(indent + indent + "Expected: " + 1/(72^6));
+disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3)^6);
 
 for i = 1:size(c1, 2)
     if min(c1(:, i) == [18 18 18 18 18 18])
@@ -75,7 +77,9 @@ end
 
 d1 = zeros(6, mediSimNum);
 for i = 1:size(d1, 2)
-    d1(:, i) = [d(3, 6) d(3, 6) d(3, 6) d(3, 6) d(3, 6) d(3, 6)];
+    for j = 1:size(d1, 1)
+        d1(j, i) = d(3, 6);
+    end
 end
 
 disp(newline + indent + "D:");
@@ -120,51 +124,66 @@ histogram(a2troll);
 title("Probability Mass Function of Troll Hit Points with " + easySimNum + " Samples");
 xlabel("Hit Points");
 ylabel("Probability");
-yticklabels(yticks / size(a2troll,2));
+yticklabels(yticks / size(a2troll, 2));
 
 subplot(2, 1, 2);
 histogram(a2spell);
 title("Probability Mass Function of Wizard Spell Damage with " + easySimNum + " Samples");
 xlabel("Spell Damage");
 ylabel("Probability");
-yticklabels(yticks / size(a2spell,2));
+yticklabels(yticks / size(a2spell, 2));
 
 
 % c
 
-c2 = 1:easySimNum;
+c2 = zeros(2, easySimNum);
 for i = 1:size(c2, 2)
-    temp1 = d(1, 4) + d(1, 4);
-    temp2 = d(2, 2);
-    if temp2 >= temp1
-        c2(i) = 0;
-    else
-        c2(i) = temp1 - temp2;
+    c2(1, i) = d(1, 4);
+    c2(2, i) = d(1, 4);
+end
+
+for i = 1:size(c2, 2)
+    fireball = d(2, 2);
+    if fireball >= c2(1, i)
+        c2(1, i) = 0;
+    end
+    if fireball >= c2(2, i)
+        c2(2, i) = 0;
     end
 end
 
 disp(newline + indent + "C:");
-disp(indent + indent + "Experimental: " + prob(c2, 0));
-disp(indent + indent + "Expected: " + 13/64);
+disp(indent + indent + "Experimental: " + prob(c2, [0 0]));
+disp(indent + indent + "Expected: " + 19/32);
 
 
 % d
 
-d2 = 1:easySimNum;
+d2 = zeros(2, easySimNum);
 for i = 1:size(d2, 2)
-    while true
-        temp1 = d(1, 4);
-        temp2 = d(2, 2);
-        if temp2 >= temp1
-            break;
-        end
-    end
-    d2(i) = temp2 - temp1;
+    d2(1, i) = d(1, 4);
+    d2(2, i) = d(1, 4);
 end
 
+tot = 0;
+n = 0;
+
+for i = 1:size(d2, 2)
+    fireball = d(2, 2);
+    if d2(1, i) > fireball && d2(2, i) <= fireball
+        tot = tot + d2(1, i);
+        n = n + 1;
+    elseif d2(2, i) > fireball && d1(1, i) <= fireball
+        tot = tot + d2(2, i);
+        n = n + 1;
+    end
+end
+
+meanTroll = tot / n;
+
 disp(newline + indent + "D:");
-disp(indent + indent + "Experimental: " + mean(d2));
-disp(indent + indent + "Expected: " + 13/12);
+disp(indent + indent + "Experimental: " + meanTroll);
+disp(indent + indent + "Expected: " + 19/5);
 
 
 % e
