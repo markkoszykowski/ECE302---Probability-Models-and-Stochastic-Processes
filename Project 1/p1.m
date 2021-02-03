@@ -47,7 +47,7 @@ title("Simulation of 3d6 Using 'Fun Method' with " + easySimNum + " Samples");
 xlabel("Roll");
 ylabel("Frequency");
 
-disp(newline + indent + "B:");
+disp(indent + "B:");
 disp(indent + indent + "Experimental: " + prob(b1, 18));
 disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3));
 
@@ -61,7 +61,7 @@ for i = 1:size(c1, 2)
     end
 end
 
-disp(newline + indent + "C:");
+disp(indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c1, [18 18 18 18 18 18]));
 disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3)^6);
 
@@ -82,7 +82,7 @@ for i = 1:size(d1, 2)
     end
 end
 
-disp(newline + indent + "D:");
+disp(indent + "D:");
 disp(indent + indent + "Experimental: " + prob(d1, [9 9 9 9 9 9]));
 disp(indent + indent + "Expected: " + (25/216)^6);
 
@@ -152,7 +152,7 @@ for i = 1:size(c2, 2)
     end
 end
 
-disp(newline + indent + "C:");
+disp(indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c2, [0 0]));
 disp(indent + indent + "Expected: " + 19/32);
 
@@ -181,7 +181,7 @@ end
 
 meanTroll = tot / n;
 
-disp(newline + indent + "D:");
+disp(indent + "D:");
 disp(indent + indent + "Experimental: " + meanTroll);
 disp(indent + indent + "Expected: " + 19/5);
 
@@ -206,6 +206,6 @@ title("Simulation of Shedjam Damage with " + mediSimNum + " Samples");
 xlabel("Damage");
 ylabel("Frequency");
 
-disp(newline + indent + "E:");
+disp(indent + "E:");
 disp(indent + indent + "Experimental: " + mean(e2));
 disp(indent + indent + "Expected: " + 33/8);
