@@ -75,7 +75,7 @@ end
 
 % d
 
-d1 = zeros(6, mediSimNum);
+d1 = zeros(6, hardSimNum);
 for i = 1:size(d1, 2)
     for j = 1:size(d1, 1)
         d1(j, i) = d(3, 6);
@@ -159,7 +159,7 @@ disp(indent + indent + "Expected: " + 19/32);
 
 % d
 
-d2 = zeros(2, easySimNum);
+d2 = zeros(2, mediSimNum);
 for i = 1:size(d2, 2)
     d2(1, i) = d(1, 4);
     d2(2, i) = d(1, 4);
