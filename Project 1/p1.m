@@ -18,6 +18,8 @@ disp("1");
 
 % a
 
+% P(X = 18) = (1/6)(1/6)(1/6)
+
 a1 = 1:easySimNum;
 for i = 1:size(a1, 2)
     a1(i) = d(3, 6);
@@ -36,6 +38,9 @@ disp(indent + indent + "Expected: " + 1/216);
 
 % b
 
+% P(Xf = 18) = 3(1/6)^3(215/216)^2 + 3(1/6)^6(215/216) + (1/6)^9
+%              = (3*(215)^2 + 3*(215) + 1)/216^3
+
 b1 = 1:easySimNum;
 for i = 1:size(b1, 2)
     b1(i) = fun(3, 6);
@@ -49,10 +54,12 @@ ylabel("Frequency");
 
 disp(indent + "B:");
 disp(indent + indent + "Experimental: " + prob(b1, 18));
-disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3));
+disp(indent + indent + "Expected: " + (3*(215)^2 + 3*(215) + 1)/216^3);
 
 
 % c
+
+% P(Xfn = 18), 1<=n<=6 = (P(Xf = 18))^6 = ((3*(215)^2 + 3*(215) + 1)/216^3)^6
 
 c1 = zeros(6, hardSimNum);
 for i = 1:size(c1, 2)
@@ -74,6 +81,8 @@ end
 
 
 % d
+
+% P(Xn = 9), 1<=n<=6 = (P(X = 9))^6 = (25/216)^6
 
 d1 = zeros(6, hardSimNum);
 for i = 1:size(d1, 2)
@@ -99,6 +108,12 @@ end
 disp("2");
 
 % a
+
+% E[X] = 1(1/4) + 2(1/4) + 3(1/4) + 4(1/4) = 5/2
+
+% E[Y] = 2(1/4) + 3(1/2) + 4(1/4) = 3
+
+% P(X > 3) = P(X = 4) = 1/4
 
 a2troll = 1:easySimNum;
 a2spell = 1:easySimNum;
@@ -136,6 +151,10 @@ yticklabels(yticks / size(a2spell, 2));
 
 % c
 
+% P(Y >= Xn), 1<=n<=2 = P(Y >= Xn & Y = 2) & P(Y >= Xn & Y = 3) & P(Y >= Xn & Y = 4)
+%                       = 4(1/4)^3 + 9(1/2)(1/4)^2 + 16(1/4)^3
+%                            = 19/32
+
 c2 = zeros(2, easySimNum);
 for i = 1:size(c2, 2)
     c2(1, i) = d(1, 4);
@@ -158,6 +177,12 @@ disp(indent + indent + "Expected: " + 19/32);
 
 
 % d
+
+% E[Xn|Y >= X!n & Xn > Y], 1<=n<=2 
+%   = 3 * P(Y >= X!n & Xn > Y & Y = 2) / P(Y >= X!n & Xn > Y)
+%     + 4 * P(Y >= X!n & Xn > Y & Y = 3) / P(Y >= X!n & Xn > Y)
+%       = 3 * (1/16)/(5/16) + 4 * (1/4)/(5/16)
+%           = 19/5
 
 d2 = zeros(2, mediSimNum);
 for i = 1:size(d2, 2)
@@ -187,6 +212,10 @@ disp(indent + indent + "Expected: " + 19/5);
 
 
 % e
+
+% E[Z] = (1/2)E[2d6] + (1/4)E[1d4]
+%       = (1/2)7 + (1/4)(5/2)
+%           = 33/8
 
 e2 = 1:mediSimNum;
 for i = 1:size(e2, 2)
