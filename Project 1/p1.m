@@ -20,6 +20,7 @@ disp("1");
 
 % P(X = 18) = (1/6)(1/6)(1/6)
 
+% Take random samples of ability scores
 a1 = 1:easySimNum;
 for i = 1:size(a1, 2)
     a1(i) = d(3, 6);
@@ -31,6 +32,7 @@ title("Simulation of 3d6 with " + easySimNum + " Samples");
 xlabel("Roll");
 ylabel("Frequency");
 
+% Calculate the probability that the scores were =18
 disp(indent + "A:");
 disp(indent + indent + "Experimental: " + prob(a1, 18));
 disp(indent + indent + "Expected: " + 1/216);
@@ -41,6 +43,7 @@ disp(indent + indent + "Expected: " + 1/216);
 % P(Xf = 18) = 3(1/6)^3(215/216)^2 + 3(1/6)^6(215/216) + (1/6)^9
 %              = (3*(215)^2 + 3*(215) + 1)/216^3
 
+% Take random samples of ability scores with fun method (roll 3x, choose max)
 b1 = 1:easySimNum;
 for i = 1:size(b1, 2)
     b1(i) = fun(3, 6);
@@ -52,6 +55,7 @@ title("Simulation of 3d6 Using 'Fun Method' with " + easySimNum + " Samples");
 xlabel("Roll");
 ylabel("Frequency");
 
+% Calculate the probability that the scores were =18
 disp(indent + "B:");
 disp(indent + indent + "Experimental: " + prob(b1, 18));
 disp(indent + indent + "Expected: " + (3*(215)^2 + 3*(215) + 1)/216^3);
@@ -61,6 +65,8 @@ disp(indent + indent + "Expected: " + (3*(215)^2 + 3*(215) + 1)/216^3);
 
 % P(Xfn = 18), 1<=n<=6 = (P(Xf = 18))^6 = ((3*(215)^2 + 3*(215) + 1)/216^3)^6
 
+% Take random samples of ability scores with fun method (roll 3x, choose max)
+% for all 6 ability scores
 c1 = zeros(6, hardSimNum);
 for i = 1:size(c1, 2)
     for j = 1:size(c1, 1)
@@ -68,6 +74,7 @@ for i = 1:size(c1, 2)
     end
 end
 
+% Calculate the probability that the character was =Fontaine
 disp(indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c1, [18 18 18 18 18 18]));
 disp(indent + indent + "Expected: " + ((3*(215)^2 + 3*(215) + 1)/216^3)^6);
@@ -84,6 +91,7 @@ end
 
 % P(Xn = 9), 1<=n<=6 = (P(X = 9))^6 = (25/216)^6
 
+% Take random samples of ability scores for all 6 ability scores
 d1 = zeros(6, hardSimNum);
 for i = 1:size(d1, 2)
     for j = 1:size(d1, 1)
@@ -91,6 +99,7 @@ for i = 1:size(d1, 2)
     end
 end
 
+% Calculate the probability that the character was =Keene
 disp(indent + "D:");
 disp(indent + indent + "Experimental: " + prob(d1, [9 9 9 9 9 9]));
 disp(indent + indent + "Expected: " + (25/216)^6);
@@ -115,6 +124,7 @@ disp("2");
 
 % P(X > 3) = P(X = 4) = 1/4
 
+% Take random samples of Troll HPs and Fireball Damages
 a2troll = 1:easySimNum;
 a2spell = 1:easySimNum;
 for i = 1:size(a2troll, 2)
@@ -122,6 +132,8 @@ for i = 1:size(a2troll, 2)
     a2spell(i) = d(2, 2);
 end
 
+% Calculate the E[X] of Troll HP and Fireball Damage and the probability
+% that the fireball is >3
 disp(indent + "A:");
 disp(indent + indent + "Experimental Average Troll Health: " + mean(a2troll));
 disp(indent + indent + "Expected Average Toll Health: " + 5/2);
@@ -133,20 +145,45 @@ disp(indent + indent + "Expected Probability FIREBALL is >3: " + 1/4);
 
 % b
 
+b2trollx = [1 2 3 4];
+b2trolly = [0 0 0 0];
+b2spellx = [2 3 4];
+b2spelly = [0 0 0];
+
+% Calculate the probability of each value for Troll HP and Fireball Damage
+for i = 1:size(a2troll, 2)
+    if a2troll(i) == 1
+        b2trolly(1) = b2trolly(1) + 1;
+    elseif a2troll(i) == 2
+        b2trolly(2) = b2trolly(2) + 1;
+    elseif a2troll(i) == 3
+        b2trolly(3) = b2trolly(3) + 1;
+    elseif a2troll(i) == 4
+        b2trolly(4) = b2trolly(4) + 1;
+    end
+    if a2spell(i) == 2
+        b2spelly(1) = b2spelly(1) + 1;
+    elseif a2spell(i) == 3
+        b2spelly(2) = b2spelly(2) + 1;
+    elseif a2spell(i) == 4
+        b2spelly(3) = b2spelly(3) + 1;
+    end
+end
+b2trolly = b2trolly / size(a2troll, 2);
+b2spelly = b2spelly / size(a2spell, 2);
+
 figure;
-subplot(2, 1, 1);
-histogram(a2troll);
+subplot(1, 2, 1);
+stem(b2trollx, b2trolly);
 title("Probability Mass Function of Troll Hit Points with " + easySimNum + " Samples");
 xlabel("Hit Points");
 ylabel("Probability");
-yticklabels(yticks / size(a2troll, 2));
 
-subplot(2, 1, 2);
-histogram(a2spell);
+subplot(1, 2, 2);
+stem(b2spellx, b2spelly);
 title("Probability Mass Function of Wizard Spell Damage with " + easySimNum + " Samples");
 xlabel("Spell Damage");
 ylabel("Probability");
-yticklabels(yticks / size(a2spell, 2));
 
 
 % c
@@ -155,14 +192,18 @@ yticklabels(yticks / size(a2spell, 2));
 %                       = 4(1/4)^3 + 9(1/2)(1/4)^2 + 16(1/4)^3
 %                            = 19/32
 
+% Take random samples of Troll HPs for 2 Trolls
 c2 = zeros(2, easySimNum);
 for i = 1:size(c2, 2)
     c2(1, i) = d(1, 4);
     c2(2, i) = d(1, 4);
 end
 
+% For each set of trolls, produce a fireball and see if it would have killed
+% the trolls
 for i = 1:size(c2, 2)
     fireball = d(2, 2);
+    % Sets value to zero if dead since prob() cant accept ranges
     if fireball >= c2(1, i)
         c2(1, i) = 0;
     end
@@ -171,6 +212,7 @@ for i = 1:size(c2, 2)
     end
 end
 
+% Calculate the probability that both Trolls were killed
 disp(indent + "C:");
 disp(indent + indent + "Experimental: " + prob(c2, [0 0]));
 disp(indent + indent + "Expected: " + 19/32);
@@ -184,17 +226,22 @@ disp(indent + indent + "Expected: " + 19/32);
 %       = 3 * (1/16)/(5/16) + 4 * (1/4)/(5/16)
 %           = 19/5
 
+% Take random samples of Troll HPs for 2 Trolls
 d2 = zeros(2, mediSimNum);
 for i = 1:size(d2, 2)
     d2(1, i) = d(1, 4);
     d2(2, i) = d(1, 4);
 end
 
+% Calculate the E[X] of the Troll HP of the Troll that survived given one
+% died and one survived
 tot = 0;
 n = 0;
 
 for i = 1:size(d2, 2)
     fireball = d(2, 2);
+    % Check condition that either Troll 1 died and Troll 2 survived or
+    % vice-versa
     if d2(1, i) > fireball && d2(2, i) <= fireball
         tot = tot + d2(1, i);
         n = n + 1;
@@ -217,6 +264,7 @@ disp(indent + indent + "Expected: " + 19/5);
 %       = (1/2)7 + (1/4)(5/2)
 %           = 33/8
 
+% Take random samples of Shedjam Damage
 e2 = 1:mediSimNum;
 for i = 1:size(e2, 2)
     damage = 0;
@@ -235,6 +283,7 @@ title("Simulation of Shedjam Damage with " + mediSimNum + " Samples");
 xlabel("Damage");
 ylabel("Frequency");
 
+% Calculate the E[X] of Shedjam Damage
 disp(indent + "E:");
 disp(indent + indent + "Experimental: " + mean(e2));
 disp(indent + indent + "Expected: " + 33/8);
