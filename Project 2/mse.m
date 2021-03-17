@@ -1,36 +1,30 @@
-% Mark, Tamar, Henry
-clear; close all; clc;
+% Tamar Bacalu, Mark Koszykowski, Henry Son
+clc; clear; close all;
 
 %% Scenario 1
-% linear estimator x/5
-l_est = @(x) x / 5;
-% bayes estimator
-b_est = @(x) (1 + x) / 2 .* (x < -1) + ...
-             0 .* and(x >= -1, x < 1) + ...
-             (-1 + x) / 2 .* (x >= 1);
 
 % theoretical MSEs
 BMMSE = 1/4;
 LMMSE = 4/15;
 
 % generating random vectors
-N = 10e6;
-W = -2 + 4 * rand(N, 1, 'double');
-Y = -1 + 2 * rand(N, 1, 'double');
+N = 1e6;
+W = unifrnd(-2, 2, [N 1]);
+Y = unifrnd(-1, 1, [N 1]);
 X = Y + W;
 
-% linear
-l_y_hat = l_est(X);
-LMMSE(2) = mean((Y - l_y_hat) .^ 2);
-
 % bayes
-b_y_hat = b_est(X);
-BMMSE(2) = mean((Y - y_hat) .^ 2);
+b_y_hat = bmmse(X, Y);
+BMMSE(2, 1) = mean((Y - b_y_hat) .^ 2);
+
+% linear
+l_y_hat = lmmse(X, Y);
+LMMSE(2, 1) = mean((Y - l_y_hat) .^ 2);
+
+Rows = {'Theoretical'; 'Experimental'};
 
 % generate table
-sc1_table = table(BMMSE(:), LMMSE(:), ...
-            'RowNames', {'Theoretical'; 'Results'}, ...
-            'VariableTypes', {'Bayes_MMSE', 'Linear_MMSE'});
+sc1_table = table(Rows, LMMSE, BMMSE)
 
 %% Scenario 2
 N = 10e6;
