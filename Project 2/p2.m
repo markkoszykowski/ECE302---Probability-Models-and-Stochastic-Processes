@@ -27,7 +27,8 @@ Rows = {'Theoretical'; 'Experimental'};
 sc1_table = table(Rows, LMMSE, BMMSE)
 
 %% Scenario 2
-N = 10e6;
+
+N = 1e6;
 N_obs = 20;
 N_obs_vect = 2:N_obs;
 
