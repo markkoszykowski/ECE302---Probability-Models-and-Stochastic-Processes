@@ -75,7 +75,6 @@ for n = obs
 end
 
 % generate plot
-
 figure;
 plot(obs, MMSE1(1, :), '-', ...
     obs, MMSE1(2, :), 'x', ...
