@@ -10,6 +10,17 @@ obs = 5:25;
 lambda = [.5 1];
 alpha = [.5 1];
 
+% Functions
+%
+% Exponential Distribution:
+%   ^lambda^ = n / Sigma(i = 0, n) {xi}
+%
+% Rayleigh Distribution:
+%   ^alpha^ = sqrt(1/2n * Sigma(i = 0, n) {xi})
+%
+lambdaEst = @(x, n) n ./ sum(x, 2);
+alphaEst = @(x) sqrt(.5 * mean(x.^2, 2));
+
 % Arrays to store MSE for each # of observations
 mseExp1 = zeros(size(obs));
 mseExp2 = zeros(size(obs));
@@ -35,18 +46,11 @@ for i = obs
     ray1 = raylrnd(alpha(1), [N i]);
     ray2 = raylrnd(alpha(2), [N i]);
     
-    % Calculate maximum likelihood for each N attempt
-    %
-    % Exponential Distribution:
-    %   ^lambda^ = n / Sigma(i = 0, n) {xi}
-    %
-    % Rayleigh Distribution:
-    %   ^alpha^ = sqrt(1/2n * Sigma(i = 0, n) {xi})
-    %
-    lambdaHat1 = i ./ sum(exp1, 2);
-    lambdaHat2 = i ./ sum(exp2, 2);
-    alphaHat1 = sqrt(.5 * mean(ray1.^2, 2));
-    alphaHat2 = sqrt(.5 * mean(ray2.^2, 2));
+    % Calculate ML estimator for each N attempt
+    lambdaHat1 = lambdaEst(exp1, i);
+    lambdaHat2 = lambdaEst(exp2, i);
+    alphaHat1 = alphaEst(ray1);
+    alphaHat2 = alphaEst(ray2);
     
     % Calculate MSE for each distribution
     mseExp1(i - obs(1) + 1) = mean((lambda(1) - lambdaHat1).^2);
@@ -99,3 +103,32 @@ legend("Exponential RV: \lambda = " + lambda(1), ...
     "Rayleigh RV: \alpha = " + alpha(2));
 
 %% Part 2
+
+% Import data
+load data.mat;
+[~, size] = size(data);
+
+% Get the ML estimators
+paramExp = lambdaEst(data, size);
+paramRay = alphaEst(data);
+
+% Variance
+%
+% Exponential Distribution:
+%   Var(X) = 1 / theta^2
+%
+% Rayleigh Distribution:
+%   Var(X) = (4 - pi)/2 theta^2
+%
+dataVar = var(data);
+disp("Variance of the Data: " + dataVar);
+paramExpVar = 1 / paramExp^2;
+disp("Variance of Exponential RV given parameter: " + paramExpVar);
+paramRayVar = (4 - pi)/2 * paramRay^2;
+disp("Variance of Rayleigh RV given parameter: " + paramRayVar);
+
+% The variance of the data provided reflects that of a Rayleigh
+% Random Variable given the calculated parameter
+%
+% (paramExpVar - dataVar) >> (paramRayVar - dataVar)
+%
