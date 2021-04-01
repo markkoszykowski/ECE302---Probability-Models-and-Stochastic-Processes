@@ -41,6 +41,11 @@ varRay2 = zeros(size(obs));
 
 for i = obs
     % Draw i samples from the respective distribution N times
+    %
+    %   exprnd asks for mean, which is 1/lambda
+    %
+    %   raylrnd asks for scale parameter, which is alpha
+    %
     exp1 = exprnd(1/lambda(1), [N i]);
     exp2 = exprnd(1/lambda(2), [N i]);
     ray1 = raylrnd(alpha(1), [N i]);
@@ -132,3 +137,8 @@ disp("Variance of Rayleigh RV given parameter: " + paramRayVar);
 %
 % (paramExpVar - dataVar) >> (paramRayVar - dataVar)
 %
+if (paramExpVar - dataVar) > (paramRayVar - dataVar)
+    disp("Data was drawn from Rayleigh Distribution");
+else
+    disp("Data was drawn from Exponential Distribution");
+end
