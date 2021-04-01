@@ -64,10 +64,10 @@ for i = obs
     mseRay2(i - obs(1) + 1) = mean((alpha(2) - alphaHat2).^2);
     
     % Calculate bias for each distribution
-    biasExp1(i - obs(1) + 1) = mean((lambdaHat1 - lambda(1)));
-    biasExp2(i - obs(1) + 1) = mean((lambdaHat2 - lambda(2)));
-    biasRay1(i - obs(1) + 1) = mean((alphaHat1 - alpha(1)));
-    biasRay2(i - obs(1) + 1) = mean((alphaHat2 - alpha(2)));
+    biasExp1(i - obs(1) + 1) = mean(lambdaHat1) - lambda(1);
+    biasExp2(i - obs(1) + 1) = mean(lambdaHat2) - lambda(2);
+    biasRay1(i - obs(1) + 1) = mean(alphaHat1) - alpha(1);
+    biasRay2(i - obs(1) + 1) = mean(alphaHat2) - alpha(2);
     
     % Calculate variance for each distribution
     varExp1(i - obs(1) + 1) = var(lambdaHat1);
