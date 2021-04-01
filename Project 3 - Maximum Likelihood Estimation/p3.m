@@ -74,7 +74,7 @@ end
 % Create plots
 figure;
 plot(obs, mseExp1, obs, mseExp2, obs, mseRay1, obs, mseRay2);
-title("MSE of Paramter \theta vs. Number of Observation");
+title("MSE of Parameter \theta vs. Number of Observation");
 xlabel("Number of Observations");
 ylabel("MSE");
 legend("Exponential RV: \lambda = " + lambda(1), ...
@@ -84,7 +84,7 @@ legend("Exponential RV: \lambda = " + lambda(1), ...
 
 figure;
 plot(obs, biasExp1, obs, biasExp2, obs, biasRay1, obs, biasRay2);
-title("Bias of Paramter \theta vs. Number of Observation");
+title("Bias of Parameter \theta vs. Number of Observation");
 xlabel("Number of Observations");
 ylabel("Bias");
 legend("Exponential RV: \lambda = " + lambda(1), ...
@@ -94,7 +94,7 @@ legend("Exponential RV: \lambda = " + lambda(1), ...
 
 figure;
 plot(obs, varExp1, obs, varExp2, obs, varRay1, obs, varRay2);
-title("Variance of Paramter \theta vs. Number of Observation");
+title("Variance of Parameter \theta vs. Number of Observation");
 xlabel("Number of Observations");
 ylabel("Variance");
 legend("Exponential RV: \lambda = " + lambda(1), ...
