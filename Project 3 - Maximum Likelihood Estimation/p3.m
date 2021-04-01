@@ -117,6 +117,8 @@ load data.mat;
 paramExp = lambdaEst(data, size);
 paramRay = alphaEst(data);
 
+% Means of two distributions given parameter are too similar to compare
+%
 % Variance
 %
 % Exponential Distribution:
