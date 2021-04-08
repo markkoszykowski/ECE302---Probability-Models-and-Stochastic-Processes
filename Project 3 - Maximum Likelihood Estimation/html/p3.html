@@ -1,0 +1,363 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>p3</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-01"><meta name="DC.source" content="p3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Part 1</a></li><li><a href="#3">Part 2</a></li></ul></div><pre class="codeinput"><span class="comment">% Tamar Bacalu, Mark Koszykowski, Henry Son</span>
+clc; clear; close <span class="string">all</span>;
+</pre><h2 id="2">Part 1</h2><pre class="codeinput"><span class="comment">% Parameters for Part 1</span>
+N = 1e6;
+N_obs = 20;
+obs = 5:25;
+lambda = [.5 1];
+alpha = [.5 1];
+
+<span class="comment">% Functions</span>
+<span class="comment">%</span>
+<span class="comment">% Exponential Distribution:</span>
+<span class="comment">%   ^lambda^ = n / Sigma(i = 0, n) {xi}</span>
+<span class="comment">%</span>
+<span class="comment">% Rayleigh Distribution:</span>
+<span class="comment">%   ^alpha^ = sqrt(1/2n * Sigma(i = 0, n) {xi})</span>
+<span class="comment">%</span>
+lambdaEst = @(x, n) n ./ sum(x, 2);
+alphaEst = @(x) sqrt(.5 * mean(x.^2, 2));
+
+<span class="comment">% Arrays to store MSE for each # of observations</span>
+mseExp1 = zeros(size(obs));
+mseExp2 = zeros(size(obs));
+mseRay1 = zeros(size(obs));
+mseRay2 = zeros(size(obs));
+
+<span class="comment">% Arrays to store bias for each # of observations</span>
+biasExp1 = zeros(size(obs));
+biasExp2 = zeros(size(obs));
+biasRay1 = zeros(size(obs));
+biasRay2 = zeros(size(obs));
+
+<span class="comment">% Arrays to store variance for each # of observations</span>
+varExp1 = zeros(size(obs));
+varExp2 = zeros(size(obs));
+varRay1 = zeros(size(obs));
+varRay2 = zeros(size(obs));
+
+<span class="keyword">for</span> i = obs
+    <span class="comment">% Draw i samples from the respective distribution N times</span>
+    <span class="comment">%</span>
+    <span class="comment">%   exprnd asks for mean, which is 1/lambda</span>
+    <span class="comment">%</span>
+    <span class="comment">%   raylrnd asks for scale parameter, which is alpha</span>
+    <span class="comment">%</span>
+    exp1 = exprnd(1/lambda(1), [N i]);
+    exp2 = exprnd(1/lambda(2), [N i]);
+    ray1 = raylrnd(alpha(1), [N i]);
+    ray2 = raylrnd(alpha(2), [N i]);
+
+    <span class="comment">% Calculate ML estimator for each N attempt</span>
+    lambdaHat1 = lambdaEst(exp1, i);
+    lambdaHat2 = lambdaEst(exp2, i);
+    alphaHat1 = alphaEst(ray1);
+    alphaHat2 = alphaEst(ray2);
+
+    <span class="comment">% Calculate MSE for each distribution</span>
+    mseExp1(i - obs(1) + 1) = mean((lambda(1) - lambdaHat1).^2);
+    mseExp2(i - obs(1) + 1) = mean((lambda(2) - lambdaHat2).^2);
+    mseRay1(i - obs(1) + 1) = mean((alpha(1) - alphaHat1).^2);
+    mseRay2(i - obs(1) + 1) = mean((alpha(2) - alphaHat2).^2);
+
+    <span class="comment">% Calculate bias for each distribution</span>
+    biasExp1(i - obs(1) + 1) = mean(lambdaHat1) - lambda(1);
+    biasExp2(i - obs(1) + 1) = mean(lambdaHat2) - lambda(2);
+    biasRay1(i - obs(1) + 1) = mean(alphaHat1) - alpha(1);
+    biasRay2(i - obs(1) + 1) = mean(alphaHat2) - alpha(2);
+
+    <span class="comment">% Calculate variance for each distribution</span>
+    varExp1(i - obs(1) + 1) = var(lambdaHat1);
+    varExp2(i - obs(1) + 1) = var(lambdaHat2);
+    varRay1(i - obs(1) + 1) = var(alphaHat1);
+    varRay2(i - obs(1) + 1) = var(alphaHat2);
+<span class="keyword">end</span>
+
+<span class="comment">% Create plots</span>
+figure;
+plot(obs, mseExp1, obs, mseExp2, obs, mseRay1, obs, mseRay2);
+title(<span class="string">"MSE of Parameter \theta vs. Number of Observation"</span>);
+xlabel(<span class="string">"Number of Observations"</span>);
+ylabel(<span class="string">"MSE"</span>);
+legend(<span class="string">"Exponential RV: \lambda = "</span> + lambda(1), <span class="keyword">...</span>
+    <span class="string">"Exponential RV: \lambda = "</span> + lambda(2), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(1), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(2));
+
+figure;
+plot(obs, biasExp1, obs, biasExp2, obs, biasRay1, obs, biasRay2);
+title(<span class="string">"Bias of Parameter \theta vs. Number of Observation"</span>);
+xlabel(<span class="string">"Number of Observations"</span>);
+ylabel(<span class="string">"Bias"</span>);
+legend(<span class="string">"Exponential RV: \lambda = "</span> + lambda(1), <span class="keyword">...</span>
+    <span class="string">"Exponential RV: \lambda = "</span> + lambda(2), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(1), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(2));
+
+figure;
+plot(obs, varExp1, obs, varExp2, obs, varRay1, obs, varRay2);
+title(<span class="string">"Variance of Parameter \theta vs. Number of Observation"</span>);
+xlabel(<span class="string">"Number of Observations"</span>);
+ylabel(<span class="string">"Variance"</span>);
+legend(<span class="string">"Exponential RV: \lambda = "</span> + lambda(1), <span class="keyword">...</span>
+    <span class="string">"Exponential RV: \lambda = "</span> + lambda(2), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(1), <span class="keyword">...</span>
+    <span class="string">"Rayleigh RV: \alpha = "</span> + alpha(2));
+</pre><img vspace="5" hspace="5" src="p3_01.png" alt=""> <img vspace="5" hspace="5" src="p3_02.png" alt=""> <img vspace="5" hspace="5" src="p3_03.png" alt=""> <h2 id="3">Part 2</h2><pre class="codeinput"><span class="comment">% Import data</span>
+load <span class="string">data.mat</span>;
+[~, size] = size(data);
+
+<span class="comment">% Get the ML estimators</span>
+paramExp = lambdaEst(data, size);
+paramRay = alphaEst(data);
+
+<span class="comment">% Means of two distributions given parameter are too similar to compare</span>
+<span class="comment">%</span>
+<span class="comment">% Variance</span>
+<span class="comment">%</span>
+<span class="comment">% Exponential Distribution:</span>
+<span class="comment">%   Var(X) = 1 / theta^2</span>
+<span class="comment">%</span>
+<span class="comment">% Rayleigh Distribution:</span>
+<span class="comment">%   Var(X) = (4 - pi)/2 theta^2</span>
+<span class="comment">%</span>
+dataVar = var(data);
+disp(<span class="string">"Variance of the Data: "</span> + dataVar);
+paramExpVar = 1 / paramExp^2;
+disp(<span class="string">"Variance of Exponential RV given parameter: "</span> + paramExpVar);
+paramRayVar = (4 - pi)/2 * paramRay^2;
+disp(<span class="string">"Variance of Rayleigh RV given parameter: "</span> + paramRayVar);
+
+<span class="comment">% The variance of the data provided reflects that of a Rayleigh</span>
+<span class="comment">% Random Variable given the calculated parameter</span>
+<span class="comment">%</span>
+<span class="comment">% (paramExpVar - dataVar) &gt;&gt; (paramRayVar - dataVar)</span>
+<span class="comment">%</span>
+<span class="keyword">if</span> (paramExpVar - dataVar) &gt; (paramRayVar - dataVar)
+    disp(<span class="string">"Data was drawn from Rayleigh Distribution"</span>);
+<span class="keyword">else</span>
+    disp(<span class="string">"Data was drawn from Exponential Distribution"</span>);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Variance of the Data: 0.004195
+Variance of Exponential RV given parameter: 0.016458
+Variance of Rayleigh RV given parameter: 0.0044313
+Data was drawn from Rayleigh Distribution
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Tamar Bacalu, Mark Koszykowski, Henry Son
+clc; clear; close all;
+
+%% Part 1
+
+% Parameters for Part 1
+N = 1e6;
+N_obs = 20;
+obs = 5:25;
+lambda = [.5 1];
+alpha = [.5 1];
+
+% Functions
+%
+% Exponential Distribution:
+%   ^lambda^ = n / Sigma(i = 0, n) {xi}
+%
+% Rayleigh Distribution:
+%   ^alpha^ = sqrt(1/2n * Sigma(i = 0, n) {xi})
+%
+lambdaEst = @(x, n) n ./ sum(x, 2);
+alphaEst = @(x) sqrt(.5 * mean(x.^2, 2));
+
+% Arrays to store MSE for each # of observations
+mseExp1 = zeros(size(obs));
+mseExp2 = zeros(size(obs));
+mseRay1 = zeros(size(obs));
+mseRay2 = zeros(size(obs));
+
+% Arrays to store bias for each # of observations
+biasExp1 = zeros(size(obs));
+biasExp2 = zeros(size(obs));
+biasRay1 = zeros(size(obs));
+biasRay2 = zeros(size(obs));
+
+% Arrays to store variance for each # of observations
+varExp1 = zeros(size(obs));
+varExp2 = zeros(size(obs));
+varRay1 = zeros(size(obs));
+varRay2 = zeros(size(obs));
+
+for i = obs
+    % Draw i samples from the respective distribution N times
+    %
+    %   exprnd asks for mean, which is 1/lambda
+    %
+    %   raylrnd asks for scale parameter, which is alpha
+    %
+    exp1 = exprnd(1/lambda(1), [N i]);
+    exp2 = exprnd(1/lambda(2), [N i]);
+    ray1 = raylrnd(alpha(1), [N i]);
+    ray2 = raylrnd(alpha(2), [N i]);
+    
+    % Calculate ML estimator for each N attempt
+    lambdaHat1 = lambdaEst(exp1, i);
+    lambdaHat2 = lambdaEst(exp2, i);
+    alphaHat1 = alphaEst(ray1);
+    alphaHat2 = alphaEst(ray2);
+    
+    % Calculate MSE for each distribution
+    mseExp1(i - obs(1) + 1) = mean((lambda(1) - lambdaHat1).^2);
+    mseExp2(i - obs(1) + 1) = mean((lambda(2) - lambdaHat2).^2);
+    mseRay1(i - obs(1) + 1) = mean((alpha(1) - alphaHat1).^2);
+    mseRay2(i - obs(1) + 1) = mean((alpha(2) - alphaHat2).^2);
+    
+    % Calculate bias for each distribution
+    biasExp1(i - obs(1) + 1) = mean(lambdaHat1) - lambda(1);
+    biasExp2(i - obs(1) + 1) = mean(lambdaHat2) - lambda(2);
+    biasRay1(i - obs(1) + 1) = mean(alphaHat1) - alpha(1);
+    biasRay2(i - obs(1) + 1) = mean(alphaHat2) - alpha(2);
+    
+    % Calculate variance for each distribution
+    varExp1(i - obs(1) + 1) = var(lambdaHat1);
+    varExp2(i - obs(1) + 1) = var(lambdaHat2);
+    varRay1(i - obs(1) + 1) = var(alphaHat1);
+    varRay2(i - obs(1) + 1) = var(alphaHat2);
+end
+
+% Create plots
+figure;
+plot(obs, mseExp1, obs, mseExp2, obs, mseRay1, obs, mseRay2);
+title("MSE of Parameter \theta vs. Number of Observation");
+xlabel("Number of Observations");
+ylabel("MSE");
+legend("Exponential RV: \lambda = " + lambda(1), ...
+    "Exponential RV: \lambda = " + lambda(2), ...
+    "Rayleigh RV: \alpha = " + alpha(1), ...
+    "Rayleigh RV: \alpha = " + alpha(2));
+
+figure;
+plot(obs, biasExp1, obs, biasExp2, obs, biasRay1, obs, biasRay2);
+title("Bias of Parameter \theta vs. Number of Observation");
+xlabel("Number of Observations");
+ylabel("Bias");
+legend("Exponential RV: \lambda = " + lambda(1), ...
+    "Exponential RV: \lambda = " + lambda(2), ...
+    "Rayleigh RV: \alpha = " + alpha(1), ...
+    "Rayleigh RV: \alpha = " + alpha(2));
+
+figure;
+plot(obs, varExp1, obs, varExp2, obs, varRay1, obs, varRay2);
+title("Variance of Parameter \theta vs. Number of Observation");
+xlabel("Number of Observations");
+ylabel("Variance");
+legend("Exponential RV: \lambda = " + lambda(1), ...
+    "Exponential RV: \lambda = " + lambda(2), ...
+    "Rayleigh RV: \alpha = " + alpha(1), ...
+    "Rayleigh RV: \alpha = " + alpha(2));
+
+%% Part 2
+
+% Import data
+load data.mat;
+[~, size] = size(data);
+
+% Get the ML estimators
+paramExp = lambdaEst(data, size);
+paramRay = alphaEst(data);
+
+% Means of two distributions given parameter are too similar to compare
+%
+% Variance
+%
+% Exponential Distribution:
+%   Var(X) = 1 / theta^2
+%
+% Rayleigh Distribution:
+%   Var(X) = (4 - pi)/2 theta^2
+%
+dataVar = var(data);
+disp("Variance of the Data: " + dataVar);
+paramExpVar = 1 / paramExp^2;
+disp("Variance of Exponential RV given parameter: " + paramExpVar);
+paramRayVar = (4 - pi)/2 * paramRay^2;
+disp("Variance of Rayleigh RV given parameter: " + paramRayVar);
+
+% The variance of the data provided reflects that of a Rayleigh
+% Random Variable given the calculated parameter
+%
+% (paramExpVar - dataVar) >> (paramRayVar - dataVar)
+%
+if (paramExpVar - dataVar) > (paramRayVar - dataVar)
+    disp("Data was drawn from Rayleigh Distribution");
+else
+    disp("Data was drawn from Exponential Distribution");
+end
+##### SOURCE END #####
+--></body></html>
