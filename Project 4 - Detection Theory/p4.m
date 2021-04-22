@@ -108,8 +108,12 @@ Y(rands == 1) = Aval + X(rands == 1);
 % target not present
 Y(rands ~= 1) = Aval + Z(rands ~= 1);
 
-% no real threshold exists if sigmaZ > sigma, always choose that target isnt 
+% no real threshold exists for chosen value of sigmaZ, always choose that target isnt 
 % present (H0) since probability is always higher than if target is present (H1)
+
+% squared difference threshold (easier than solving quadratic)
+% this must be positive otherwise always choose H0
+thres = 2 * ((sigma^2 * sigmaZ^2) / (sigmaZ^2 - sigma^2)) * log((p1 * sigmaZ) / (p0 * sigma));
 
 % always choosing not present, so probability of error should just be 
 % probability of target present
@@ -122,14 +126,15 @@ disp("     E:");
 disp("          Theoretical Error: " + theo_err);
 disp("          Experimental Error: " + expr_err);
 
-ZXR = linspace(1, 10, 6);
+ZXR = linspace(1, 100, 6);
 
 figure();
 set(gcf, 'position', [60, 60, 1200, 700]);
+% simulation to plot one sided ROC
 % keeping sigma constant while altering sigmaZ
 for i = 1:length(ZXR)
     % calculate new standard deviation of Z distribution
-    newsigmaZ = sqrt(SNR(i) * sigma^2);
+    newsigmaZ = sqrt(ZXR(i) * sigma^2);
     
     % generate Z values
     newZ = normrnd(0, newsigmaZ, [N, 1]);
@@ -147,21 +152,68 @@ for i = 1:length(ZXR)
     
     for j = 1:length(testthres)
         % calculate the False Positive and Detection probabilities for each
-        % threshold
+        % one sided threshold
         P_F(j) = sum((newY > testthres(j)) & (rands ~= 1)) / sum((rands ~= 1));
         P_D(j) = sum((newY > testthres(j)) & (rands == 1)) / sum((rands == 1));
+    end
+        
+    % plot results for each ZXR
+    subplot(2, 3, i);
+    plot(P_F, P_D);
+    title("One Sided ROC for \sigma_Z^2 / \sigma^2 of " + ZXR(i));
+    xlabel("Probability of False Alarm (P_F)");
+    ylabel("Probability of Detection (P_D)");
+    xlim([0 1]);
+    ylim([0 1]);
+end
+
+figure();
+set(gcf, 'position', [70, 70, 1200, 700]);
+% simulation to plot two sided ROC
+% keeping sigma constant while altering sigmaZ
+for i = 1:length(ZXR)
+    % calculate new standard deviation of Z distribution
+    newsigmaZ = sqrt(ZXR(i) * sigma^2);
+    
+    % generate Z values
+    newZ = normrnd(0, newsigmaZ, [N, 1]);
+    
+    newY = zeros(N, 1);
+    % target present
+    newY(rands == 1) = Aval + X(rands == 1);
+    % target not present
+    newY(rands ~= 1) = Aval + newZ(rands ~= 1);
+    
+    % create a bunch of thresholds to create ROC plot
+    testthres = linspace(0, 200, 1e3);
+    P_F = zeros(length(testthres), 1);
+    P_D = zeros(length(testthres), 1);
+    
+    for j = 1:length(testthres)
+        % calculate the False Positive and Detection probabilities for each
+        % two sided threshold
+        P_F(j) = sum((((newY - Aval).^2) < testthres(j)) & (rands ~= 1)) / sum((rands ~= 1));
+        P_D(j) = sum((((newY - Aval).^2) < testthres(j)) & (rands == 1)) / sum((rands == 1));
     end
     
     % False Positive and Detection probabilities for MAP
     % if value is real, choose target not present so long as variance of Z
     % is larger than or equal to variance of X
-    MAP_F = sum(((imag(Y) ~= 0) == 1) & ((rands == 1) == 0)) / sum((rands ~= 1));
-    MAP_D = sum(((imag(Y) ~= 0) == 1) & ((rands == 1) == 1)) / sum((rands == 1));
-    
+    MAP_thres = 2 * ((sigma^2 * newsigmaZ^2) / (newsigmaZ^2 - sigma^2)) * log((p1 * newsigmaZ) / (p0 * sigma));
+    % make sure value isnt less than zero or infinite (occurs when
+    % variances are the same)
+    if MAP_thres >= 0 && MAP_thres ~= Inf
+        MAP_F = sum((((newY - Aval).^2) < MAP_thres) & ((rands == 1) == 0)) / sum((rands ~= 1));
+        MAP_D = sum((((newY - Aval).^2) < MAP_thres) & ((rands == 1) == 1)) / sum((rands == 1));
+    else
+        MAP_F = sum(((imag(newY) ~= 0) == 1) & ((rands == 1) == 0)) / sum((rands ~= 1));
+        MAP_D = sum(((imag(newY) ~= 0) == 1) & ((rands == 1) == 1)) / sum((rands == 1));
+    end
+        
     % plot results for each ZXR
     subplot(2, 3, i);
     plot(P_F, P_D, '-b', MAP_F, MAP_D, 'r*');
-    title("Reciever Operating Curve for \sigma_Z^2 / \sigma^2 of " + ZXR(i));
+    title("Two Sided ROC for \sigma_Z^2 / \sigma^2 of " + ZXR(i));
     xlabel("Probability of False Alarm (P_F)");
     ylabel("Probability of Detection (P_D)");
     legend("ROC", "MAP", 'Location', 'southeast');
