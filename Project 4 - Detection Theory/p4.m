@@ -17,7 +17,7 @@ N = 1e3;
 sigma = .5;
 
 A = zeros(N, 1);
-% generate 100 random values 1-5
+% generate 1000 random values 1-5
 rands = randi(5, N, 1);
 % 1/5 (20%) chance that A takes on constant value, otherwise 0
 A(rands == 1) = Aval;
@@ -38,7 +38,7 @@ expr_err = sum((Y > thres) ~= (A == Aval)) / N;
 F = sum((Y > thres) & (A == 0)) / sum((A == 0));
 % Detection
 D = sum((Y > thres) & (A == Aval)) / sum((A == Aval));
-% should be same as expr_err
+% should be same as expr_err (check console)
 expr_err_check = (1 - D) * (sum((A == Aval)) / N) + F * (sum((A == 0)) / N);
 
 disp("     A:");
@@ -77,7 +77,7 @@ for i = 1:length(SNR)
     
     for j = 1:length(testthres)
         % calculate the False Positive and Detection probabilities for each
-        % threshold
+        % threshold and the specific threshold for part c
         F10 = sum((newY > newthres) & (newA ~= newAval)) / sum((newA == 0));
         D10 = sum((newY > newthres) & (newA == newAval)) / sum((newA == newAval));
         P_F(j) = sum((newY > testthres(j)) & (newA ~= newAval)) / sum((newA == 0));
@@ -108,11 +108,11 @@ Y(rands == 1) = Aval + X(rands == 1);
 % target not present
 Y(rands ~= 1) = Aval + Z(rands ~= 1);
 
-% no real threshold exists for chosen value of sigmaZ, always choose that target isnt 
+% no real threshold exists for chosen value of sigmaZ => always choose that target isnt 
 % present (H0) since probability is always higher than if target is present (H1)
 
 % squared difference threshold (easier than solving quadratic)
-% this must be positive otherwise always choose H0
+% this must be positive otherwise always choose H0 for sigmaZ^2 > sigma^2
 thres = 2 * ((sigma^2 * sigmaZ^2) / (sigmaZ^2 - sigma^2)) * log((p1 * sigmaZ) / (p0 * sigma));
 
 % always choosing not present, so probability of error should just be 
@@ -126,11 +126,12 @@ disp("     E:");
 disp("          Theoretical Error: " + theo_err);
 disp("          Experimental Error: " + expr_err);
 
+% define some matrix of sigmaZ^2 to sigma^s ratios
 ZXR = linspace(1, 100, 6);
 
 figure();
 set(gcf, 'position', [60, 60, 1200, 700]);
-% simulation to plot one sided ROC
+% simulation to plot one sided threshold ROC
 % keeping sigma constant while altering sigmaZ
 for i = 1:length(ZXR)
     % calculate new standard deviation of Z distribution
@@ -196,9 +197,7 @@ for i = 1:length(ZXR)
         P_D(j) = sum((((newY - Aval).^2) < testthres(j)) & (rands == 1)) / sum((rands == 1));
     end
     
-    % False Positive and Detection probabilities for MAP
-    % if value is real, choose target not present so long as variance of Z
-    % is larger than or equal to variance of X
+    % calculating threshold for False Positive and Detection probabilities for MAP rule
     MAP_thres = 2 * ((sigma^2 * newsigmaZ^2) / (newsigmaZ^2 - sigma^2)) * log((p1 * newsigmaZ) / (p0 * sigma));
     % make sure value isnt less than zero or infinite (occurs when
     % variances are the same)
@@ -206,6 +205,7 @@ for i = 1:length(ZXR)
         MAP_F = sum((((newY - Aval).^2) < MAP_thres) & ((rands == 1) == 0)) / sum((rands ~= 1));
         MAP_D = sum((((newY - Aval).^2) < MAP_thres) & ((rands == 1) == 1)) / sum((rands == 1));
     else
+    % if threshold is less than zero, then always pick H0
         MAP_F = sum(((imag(newY) ~= 0) == 1) & ((rands == 1) == 0)) / sum((rands ~= 1));
         MAP_D = sum(((imag(newY) ~= 0) == 1) & ((rands == 1) == 1)) / sum((rands == 1));
     end
