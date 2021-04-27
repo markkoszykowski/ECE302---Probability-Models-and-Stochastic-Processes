@@ -1,4 +1,4 @@
-% Mark Koszykowski
+% Tamar Bacalu, Mark Koszykowski
 clc; clear; close all;
 
 %% Part 1
@@ -224,9 +224,6 @@ end
 %% Part 2
 
 data = load('Iris.mat');
-
-trainF = zeros(75,4);
-testF = zeros(75,4);
 
 % shuffle data to keep training random
 shuffledInd = randperm(size(data.features, 1));
