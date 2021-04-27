@@ -1,4 +1,4 @@
-% Tamar Bacalu, Mark Koszykowski, Henry Son
+% Mark Koszykowski
 clc; clear; close all;
 
 %% Part 1
