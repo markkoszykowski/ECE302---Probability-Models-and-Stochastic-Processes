@@ -1,5 +1,5 @@
 clear;
-% Mark Koszykowski, Henry Son, Tamar Bacalu
+% Henry Son, Tamar Bacalu
 % ECE302: Detection Theory
 %% Radar Detection
 
