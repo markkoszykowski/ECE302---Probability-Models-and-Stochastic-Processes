@@ -62,8 +62,8 @@ N = 4
 
 | Rrr[0]   Rrr[-1]   Rrr[-2]   Rrr[-3] |  | h[0] |     | Rsr[0] |
 | Rrr[1]   Rrr[0]    Rrr[-1]   Rrr[-2] |  | h[1] |  =  | Rsr[1] |
-| Rrr[2]   R[1]      Rrr[0]    Rrr[-1] |  | h[2] |     | Rsr[2] |
-| Rrr[3]   R[2]      Rrr[1]    Rrr[0]  |  | h[3] |     | Rsr[3] |
+| Rrr[2]   Rrr[1]    Rrr[0]    Rrr[-1] |  | h[2] |     | Rsr[2] |
+| Rrr[3]   Rrr[2]    Rrr[1]    Rrr[0]  |  | h[3] |     | Rsr[3] |
 
 | 2.2   .28   .4     0  |  | h[0] |     | 1 |
 | .28   2.2   .28   .4  |  | h[1] |  =  | 0 |
