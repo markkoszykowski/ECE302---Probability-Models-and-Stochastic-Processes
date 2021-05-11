@@ -36,7 +36,7 @@ Rrr[N] = E[r[n]r[n-N]]
 
         = E[s[n]s[n-N] + .2s[n]s[n-N-1] + .4s[n]s[n-N-2] + s[n]d[n-N]
             + .2s[n-1]s[n-N] + .04s[n-1]s[n-N-1] + .08s[n-1]s[n-N-2] + .2s[n-1]d[n-N]
-            + .4s[n-2]s[n-N] + .08s[n-2]s[n-N-1] + .16s[n-1]s[n-N-2] + .4s[n-2]d[n-N]
+            + .4s[n-2]s[n-N] + .08s[n-2]s[n-N-1] + .16s[n-2]s[n-N-2] + .4s[n-2]d[n-N]
             + d[n]s[n-N] + .2d[n]s[n-N-1] + .4d[n]s[n-N-2] + d[n]d[n-N]]
 
         = Rss[N] + .2Rss[N+1] + .4Rss[N+2] + Rsd[N]
